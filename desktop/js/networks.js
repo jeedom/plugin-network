@@ -19,6 +19,15 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=pingMode]').on('change', fu
     $('.pingMode.' + $(this).value()).show();
 });
 
+$("#table_cmd").sortable({
+    axis: "y",
+    cursor: "move",
+    items: ".cmd",
+    placeholder: "ui-state-highlight",
+    tolerance: "intersect",
+    forcePlaceholderSize: true
+})
+
 function addCmdToTable(_cmd) {
     if (!isset(_cmd)) {
         var _cmd = { configuration: {} }

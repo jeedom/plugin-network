@@ -4,6 +4,12 @@
 >
 >Pour rappel s'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte
 
+# 05/04/2024
+
+- Ajout de la réorganisation des commandes dans l'équipement
+- Création de deux nouvelles commandes (addresseIP et addresseMAC) lors de la sauvegarde d'un équipement existant
+
+
 # 08/01/2024
 
 - Préparation pour jeedom 4.4
