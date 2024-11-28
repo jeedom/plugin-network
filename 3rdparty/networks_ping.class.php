@@ -54,7 +54,7 @@ class networks_Ping {
 		$ttl = escapeshellcmd($this->ttl);
 		$host = escapeshellcmd($this->host);
 		if ($_mode == 'arp') {
-			$exec_string = 'sudo arping -c 10 -C 1 -w 500000 ' . $host . ' 2> /dev/null';
+			$exec_string = 'sudo arping -c 1 -C 1 -w 10 ' . $host . ' 2> /dev/null';
 		} else {
 			$exec_string = 'sudo ping -n -c 1 -t ' . $ttl . ' ' . $host . ' 2> /dev/null';
 		}
@@ -62,7 +62,7 @@ class networks_Ping {
 		$output = array_values(array_filter($output));
 		if (!empty($output[1])) {
 			if (count($output) >= 5) {
-				$response = preg_match("/time(?:=|<)(?<time>[\.0-9]+)(?:|\s)(?<unit>[mu]?s(ec)?)/", $output[count($output)-4], $matches);
+				$response = preg_match("/time(?:=|<)(?<time>[\.0-9]+)(?:|\s)(?<unit>[mu]?s(ec)?)/", $output[count($output) - 4], $matches);
 				if ($response > 0 && isset($matches['time'])) {
 					$latency = $matches['time'];
 					if (isset($matches['unit'])) {
@@ -72,8 +72,8 @@ class networks_Ping {
 							$latency /= 1000;
 						}
 					}
-				}				
-			}			
+				}
+			}
 		}
 		return $latency;
 	}
@@ -89,6 +89,4 @@ class networks_Ping {
 		}
 		return $latency;
 	}
-
 }
-?>
