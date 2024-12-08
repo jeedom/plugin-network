@@ -158,7 +158,7 @@ class networks extends eqLogic {
 		if ($this->getConfiguration('ip') == '') {
 			return;
 		}
-		$ping = new networks_Ping($this->getConfiguration('ip'), $this->getConfiguration('ttl', 255));
+		$ping = new networks_Ping($this->getConfiguration('ip'), $this->getConfiguration('ttl', 255), $this->getConfiguration('timeout', 3));
 		$pingMode = $this->getConfiguration('pingMode', 'ip');
 		if ($pingMode == 'port') {
 			$ping->setPort($this->getConfiguration('port', 80));
@@ -166,7 +166,7 @@ class networks extends eqLogic {
 
 		$maxTry = max(min(10, $this->getConfiguration('maxTry', 3)), 1);
 		do {
-			log::add(__CLASS__, 'debug', '[' . getmypid() . ']' . __('Tentative de ping sur : ', __FILE__) . $this->getHumanName());
+			log::add(__CLASS__, 'debug', '[' . getmypid() . '] ' . __('Tentative de ping sur : ', __FILE__) . $this->getHumanName());
 			$latency_time = $ping->ping($pingMode);
 			usleep(100);
 		} while ($latency_time === false && --$maxTry > 0);
@@ -181,11 +181,11 @@ class networks extends eqLogic {
 			}
 		}
 		if ($latency_time !== false) {
-			log::add(__CLASS__, 'debug', '[' . getmypid() . ']' . __('Ping réussi sur : ', __FILE__) . $this->getHumanName());
+			log::add(__CLASS__, 'info', '[' . getmypid() . '] ' . __('Ping réussi sur : ', __FILE__) . $this->getHumanName());
 			$this->checkAndUpdateCmd('ping', 1);
 			$this->checkAndUpdateCmd('latency', $latency_time);
 		} else {
-			log::add(__CLASS__, 'debug', '[' . getmypid() . ']' . __('Ping échoué sur : ', __FILE__) . $this->getHumanName());
+			log::add(__CLASS__, 'info', '[' . getmypid() . '] ' . __('Ping échoué sur : ', __FILE__) . $this->getHumanName());
 			$this->checkAndUpdateCmd('ping', 0);
 			$this->checkAndUpdateCmd('latency', -1);
 		}

@@ -2,15 +2,16 @@
 class networks_Ping {
 	private $host;
 	private $ttl;
+	private $timeout;
 	private $port = 80;
-	private $data = 'Ping';
 
-	public function __construct($host, $ttl = 255) {
+	public function __construct($host, $ttl = 255, $timeout = 3) {
 		if (!isset($host)) {
 			throw new \Exception("Error: Host name not supplied.");
 		}
 		$this->host = $host;
 		$this->ttl = $ttl;
+		$this->timeout = $timeout;
 	}
 
 	public function setTtl($ttl) {
@@ -53,10 +54,11 @@ class networks_Ping {
 		$latency = false;
 		$ttl = escapeshellcmd($this->ttl);
 		$host = escapeshellcmd($this->host);
+		$timeout = escapeshellcmd($this->timeout);
 		if ($_mode == 'arp') {
-			$exec_string = 'sudo arping -c 1 -C 1 -w 10 ' . $host . ' 2> /dev/null';
+			$exec_string = "sudo arping -c 1 -C 1 -w 10 -W {$timeout} {$host} 2> /dev/null";
 		} else {
-			$exec_string = 'sudo ping -n -c 1 -t ' . $ttl . ' ' . $host . ' 2> /dev/null';
+			$exec_string = "sudo ping -n -c 1 -t {$ttl} -W {$timeout} {$host} 2> /dev/null";
 		}
 		exec($exec_string, $output, $return);
 		$output = array_values(array_filter($output));
@@ -80,7 +82,7 @@ class networks_Ping {
 
 	private function pingPort() {
 		$start = microtime(true);
-		$fp = @fsockopen($this->host, $this->port, $errno, $errstr, $this->ttl);
+		$fp = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
 		if (!$fp) {
 			$latency = false;
 		} else {
